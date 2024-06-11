@@ -1,15 +1,13 @@
 import { useLogout } from "@lens-protocol/react-web";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
 import { Button } from "./Button";
 
 export function LogoutButton() {
   const { isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
   const { execute } = useLogout();
 
-  const logout = () => {
+  const logout = async () => {
     void execute();
-    disconnect();
   };
 
   if (!isConnected) {

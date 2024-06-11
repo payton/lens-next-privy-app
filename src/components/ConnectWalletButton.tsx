@@ -1,12 +1,17 @@
-import { ConnectKitButton } from "connectkit";
 import { Button } from "./Button";
+import { usePrivy } from "@privy-io/react-auth";
+import { truncateEthAddress } from "@/utils/truncateEthAddress";
+import { useAccount } from "wagmi";
 
 export function ConnectWalletButton() {
-  return (
-    <ConnectKitButton.Custom>
-      {({ isConnected, show, truncatedAddress }) => {
-        return <Button onClick={show}>{isConnected ? truncatedAddress : "Connect Wallet"}</Button>;
-      }}
-    </ConnectKitButton.Custom>
+  const { ready, authenticated, login } = usePrivy();
+  const { address } = useAccount();
+
+  return !ready ? (
+    <Button disabled>Loading...</Button>
+  ) : (
+    <Button onClick={login}>
+      {authenticated ? truncateEthAddress(address) : "Connect Wallet"}
+    </Button>
   );
 }
