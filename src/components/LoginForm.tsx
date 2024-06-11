@@ -3,10 +3,13 @@ import { profileId, useLogin, useProfilesManaged } from "@lens-protocol/react-we
 import { ErrorMessage } from "./ErrorMessage";
 import { Loading } from "./Loading";
 import { Button } from "./Button";
+import { CreateProfileForm } from "@/components/CreateProfileForm";
+import { useAccount } from "wagmi";
 
 export function LoginForm({ owner, onSuccess }: { owner: string; onSuccess?: () => void }) {
   const { execute: login, loading: isLoginPending } = useLogin();
   const { data: profiles, error, loading } = useProfilesManaged({ for: owner, includeOwned: true });
+  const { address } = useAccount();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,6 +32,10 @@ export function LoginForm({ owner, onSuccess }: { owner: string; onSuccess?: () 
     console.error(result.error.message);
   };
 
+  if (!address) {
+    return null;
+  }
+
   if (loading) {
     return <Loading />;
   }
@@ -38,7 +45,12 @@ export function LoginForm({ owner, onSuccess }: { owner: string; onSuccess?: () 
   }
 
   if (profiles.length === 0) {
-    return <p className="mb-4 text-base text-gray-500">No Lens Profiles found in this wallet.</p>;
+    return (
+      <>
+        <p className="mb-4 text-base text-gray-500">No Lens Profiles found in this wallet.</p>
+        <CreateProfileForm address={address} />
+      </>
+    );
   }
 
   return (

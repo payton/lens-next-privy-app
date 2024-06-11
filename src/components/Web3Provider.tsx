@@ -37,7 +37,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!} config={privyConfig}>
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
+        <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
           <LensProvider config={lensConfig}>{children}</LensProvider>
         </WagmiProvider>
       </QueryClientProvider>
