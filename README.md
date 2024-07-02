@@ -36,7 +36,7 @@ More details on using Privy with Wagmi is available [here](https://docs.privy.io
 
 If following the Lens Quickstart, your existing Provider setup should look similar to this:
 
-```Typescript
+```tsx
 <WagmiProvider config={wagmiConfig}>
   <QueryClientProvider client={queryClient}>
     <LensProvider config={lensConfig}>
@@ -44,12 +44,11 @@ If following the Lens Quickstart, your existing Provider setup should look simil
     </LensProvider>
   </QueryClientProvider>
 </WagmiProvider>
-}
 ```
 
 Lens Protocol runs on Polygon, so the Privy Client configuration must include `polygon` as a supported chain. Your config should look something like:
 
-```Typescript
+```tsx
 const privyConfig: PrivyClientConfig = {
   defaultChain: polygon,
   supportedChains: [polygon],
@@ -63,7 +62,7 @@ const privyConfig: PrivyClientConfig = {
 
 Next, simply wrap the existing Providers with the `PrivyProvider`. Your `Provider` should now look something like this:
 
-```Typescript
+```tsx
 <PrivyProvider 
   appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!} 
   config={privyConfig}
@@ -81,7 +80,7 @@ Next, simply wrap the existing Providers with the `PrivyProvider`. Your `Provide
 
 Here's an example of the full `PrivyProvider` setup with the Lens SDK:
 
-```Typescript
+```tsx
 import React from "react";
 import { http } from "wagmi";
 import { polygon, polygonAmoy } from "wagmi/chains";
@@ -129,16 +128,44 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
 
 ```
 
-### 3. All set! 🎉
+### 3. Login with Lens
 
-That's it! Your app is now fully setup to interact with the Lens SDK using Privy.
+That's it! Your app is now fully setup to interact with the Lens SDK using Privy. To implement Lens login we must first retrieve the list of Profiles that the wallet currently owns or manages. This can be accomplished using the `useProfilesManaged` hook from the Lens SDK:
+
+```tsx
+import { useProfilesManaged, useLogin, Profile } from '@lens-protocol/react-web';
+
+const { data: profiles } = useProfilesManaged({
+  for: walletAddress,
+  includeOwned: true
+});
+```
+
+Next, use the `useLogin` hook to log in with one of the profiles returned:
+
+```tsx
+const { execute: login } = useLogin();
+const result = await login({
+  address: wallet,
+  profileId: profiles[0].id,
+});
+
+if (result.isSuccess()) {
+  // You can now interact with the Lens SDK hooks that require a logged in user
+}
+```
+
+For a more complete example, refer to the Authentication instructions from [Lens SDK docs](https://www.lens.xyz/docs/primitives/authentication#profile-login).
+
+### 4. Further
 
 Check out the [Lens SDK examples](https://github.com/lens-protocol/lens-sdk/tree/develop/examples), including `lens-next-privy-app` which includes profile creation and login using the setup from this guide. You can now use the Lens SDK to:
 
 - [log your users in with Lens](https://www.lens.xyz/docs/primitives/authentication#profile-login)
-- [allow users to create a Lens Profile](https://www.lens.xyz/docs/best-practices/onboarding#crypto-onboarding)
-- [update Lens profile metadata](https://www.lens.xyz/docs/primitives/profile/metadata#update-profile-metadata)
+- [create a Lens Profile](https://www.lens.xyz/docs/best-practices/onboarding#crypto-onboarding)
+- [update Lens Profile metadata](https://www.lens.xyz/docs/primitives/profile/metadata#update-profile-metadata)
 - [create a post](https://www.lens.xyz/docs/primitives/publications/content-creation#creating-a-post)
 - [make a post collectable](https://www.lens.xyz/docs/primitives/collect/collectables#collect-actions-simple-collect)
+- [react to (like) a publication](https://www.lens.xyz/docs/primitives/publications/reactions#react-to-publication)
 
 and so much more! Examples from the [Lens Docs](https://www.lens.xyz/docs/) can be used without any modification.
