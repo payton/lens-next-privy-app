@@ -46,6 +46,21 @@ If following the Lens Quickstart, your existing Provider setup should look simil
 </WagmiProvider>
 ```
 
+In the Lens example the `WagmiProvider` and `Config` creation function are provided by `wagmi`. However, when integrating with Privy, the `@privy-io/wagmi` package should be used instead.
+
+Change the import statements from:
+
+```tsx
+import { WagmiProvider, createConfig, http } from "wagmi";
+```
+
+to
+
+```tsx
+import { http } from "wagmi";
+import { WagmiProvider, createConfig } from "@privy-io/wagmi";
+```
+
 Lens Protocol runs on Polygon, so the Privy Client configuration must include `polygon` as a supported chain. Your config should look something like:
 
 ```tsx
