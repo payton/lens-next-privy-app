@@ -2,7 +2,7 @@
 
 [Lens Protocol](https://www.lens.xyz/docs/) is an open social network that allows users to own their content and connections. Developers can build on the network, leveraging its audience and infrastructure. Users can seamlessly switch between social apps without losing their profiles, content, or connections.
 
-Allowing users to log into Lens with Privy is fully supported and very simple to integrate.
+Allowing users to log into Lens with Privy is fully supported and simple to integrate.
 
 Here's how!
 
@@ -12,14 +12,14 @@ Here's how!
 
 In order to integrate the Privy React SDK with the Lens React SDK, your project must be on:
 
-- a minimum Privy React SDK version of `1.73.1`
+- the latest version of [@privy-io/react-auth](https://www.npmjs.com/package/@privy-io/react-auth)
 - a minimum Lens React SDK version of `2.0.0`
+
+We also assume you have set up the [Lens SDK](https://github.com/lens-protocol/lens-sdk) with your app. If you haven't, start by following the instructions in the [Lens Quickstart](https://www.lens.xyz/docs/getting-started/react-web) guide to get your app set up.
 
 ### 1. Installation
 
-The following assumes you have set up the [Lens SDK](https://github.com/lens-protocol/lens-sdk) with your app. If you haven't, start by following the instructions in the [Lens Quickstart](https://www.lens.xyz/docs/getting-started/react-web) guide to get your app set up.
-
-Next, install the Privy React SDK and [wagmi](https://wagmi.sh/) bindings:
+Install the [@privy-io/react-auth](https://www.npmjs.com/package/@privy-io/react-auth) SDK and [@privy-io/wagmi](https://www.npmjs.com/package/@privy-io/wagmi) (Privy's [wagmi](https://wagmi.sh/) bindings):
 
 ```sh
 npm install @privy-io/react-auth@latest @privy-io/wagmi
@@ -75,7 +75,7 @@ const privyConfig: PrivyClientConfig = {
 
 **Note:** `PrivyProvider` requires that the `QueryClientProvider` wraps the `WagmiProvider`.
 
-Next, simply wrap the existing Providers with the `PrivyProvider`. Your `Provider` should now look something like this:
+Next, simply wrap the existing Providers with the `PrivyProvider`:
 
 ```tsx
 <PrivyProvider 
